@@ -243,6 +243,18 @@
       <h2>📦 Place Your Order</h2>
       <p>Fill in the details below and we'll contact you to confirm</p>
     </div>
+    <!-- Product card (auto-filled from Buy Now) -->
+    <div id="product-summary" style="display:none;padding:14px 28px;background:rgba(14,165,233,0.07);border-bottom:1px solid #1e2d3d;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <img id="sum-img" src="" alt="" style="width:54px;height:54px;object-fit:cover;border-radius:10px;border:1px solid #1e2d3d;" />
+        <div>
+          <div style="font-weight:700;font-size:1rem;" id="sum-name"></div>
+          <div style="color:#0ea5e9;font-weight:700;" id="sum-price"></div>
+          <div style="color:var(--muted);font-size:0.8rem;" id="sum-cat"></div>
+        </div>
+        <a href="javascript:history.back()" style="margin-left:auto;color:var(--muted);font-size:0.82rem;text-decoration:underline;">← Change product</a>
+      </div>
+    </div>
     <div class="order-body">
       <div class="form-group">
         <label>Product Category</label>
@@ -323,6 +335,7 @@
   appId: "1:129602203125:web:6630ac7fadcd25ecc884bc",
   measurementId: "G-727NV9G2SH"
 };
+  };
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -419,12 +432,42 @@
   window.newOrder = () => {
     document.getElementById('success-msg').style.display = 'none';
     document.getElementById('order-section').style.display = 'block';
-    // Reset form
     ['category','product-name','phone','address','notes'].forEach(id => {
       document.getElementById(id).value = '';
     });
     document.getElementById('quantity').value = 1;
   };
+
+  // ---- Auto-fill from URL params (Buy Now) ----
+  function loadProductFromURL() {
+    const p = new URLSearchParams(window.location.search);
+    const name     = p.get('product');
+    const category = p.get('category');
+    const price    = p.get('price');
+    const img      = p.get('img');
+
+    if (!name) return; // Manual order — show all fields normally
+
+    // Fill hidden fields
+    document.getElementById('product-name').value = name;
+    document.getElementById('category').value = category || '';
+
+    // Show product summary card
+    const summary = document.getElementById('product-summary');
+    summary.style.display = 'block';
+    document.getElementById('sum-name').textContent  = name;
+    document.getElementById('sum-price').textContent = price ? 'Rs. ' + price : '';
+    document.getElementById('sum-cat').textContent   = category || '';
+    if (img) document.getElementById('sum-img').src  = decodeURIComponent(img);
+
+    // Hide category + product name fields (already filled)
+    const catGroup  = document.getElementById('category').closest('.form-group');
+    const nameGroup = document.getElementById('product-name').closest('.form-group');
+    if (catGroup)  catGroup.style.display  = 'none';
+    if (nameGroup) nameGroup.style.display = 'none';
+  }
+
+  loadProductFromURL();
 </script>
 </body>
 </html>
