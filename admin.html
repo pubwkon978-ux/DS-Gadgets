@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DS GADGETS | Admin Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #060c18;
+      --panel: #0d1626;
+      --panel2: #111d30;
+      --text: #e5e7eb;
+      --muted: #6b7280;
+      --border: #1a2740;
+      --brand: #0ea5e9;
+      --brand-2: #7c3aed;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 220px;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      padding: 24px 0;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+    .sidebar-logo {
+      padding: 0 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-logo h2 { font-size: 1rem; font-weight: 800; color: var(--brand); }
+    .sidebar-logo p  { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+    .sidebar-menu { padding: 16px 12px; flex: 1; }
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .menu-item.active, .menu-item:hover {
+      background: rgba(14,165,233,0.1);
+      color: var(--text);
+    }
+    .menu-icon { font-size: 1rem; }
+
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+    }
+    #admin-info { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; }
+    #admin-info img {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+    .btn-sm {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: Inter;
+      transition: all 0.2s;
+    }
+    .btn-sm:hover { color: var(--text); border-color: #374151; }
+
+    /* Main content */
+    .main { margin-left: 220px; padding: 28px; width: calc(100% - 220px); }
+
+    /* Top bar */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .topbar h1 { font-size: 1.4rem; font-weight: 700; }
+    .topbar p  { font-size: 0.85rem; color: var(--muted); margin-top: 2px; }
+
+    /* Stat cards */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    .stat-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-bottom: 8px; }
+    .stat-value { font-size: 1.8rem; font-weight: 800; }
+    .stat-value.blue   { color: var(--brand); }
+    .stat-value.yellow { color: var(--warning); }
+    .stat-value.green  { color: var(--success); }
+    .stat-value.purple { color: var(--brand-2); }
+
+    /* Orders table */
+    .orders-panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .orders-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .orders-header h3 { font-size: 1rem; font-weight: 600; }
+
+    /* Filters */
+    .filters { display: flex; gap: 8px; }
+    .filter-btn {
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: Inter;
+      transition: all 0.2s;
+    }
+    .filter-btn.active {
+      background: var(--brand);
+      color: white;
+      border-color: var(--brand);
+    }
+
+    /* Orders list */
+    #orders-list { padding: 8px; }
+
+    .order-card {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 8px;
+      display: grid;
+      grid-template-columns: 40px 1fr auto;
+      gap: 14px;
+      align-items: start;
+      transition: border-color 0.2s;
+    }
+    .order-card:hover { border-color: #2a3a54; }
+
+    .customer-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .customer-avatar img {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .order-details { min-width: 0; }
+    .order-top { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+    .customer-name { font-weight: 600; font-size: 0.95rem; }
+    .order-id { font-size: 0.75rem; color: var(--muted); font-family: monospace; }
+    .product-info { font-size: 0.88rem; color: var(--muted); margin-bottom: 6px; }
+    .product-info strong { color: var(--text); }
+    .order-meta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.8rem; color: var(--muted); }
+    .meta-item { display: flex; align-items: center; gap: 4px; }
+
+    /* Status badge */
+    .badge {
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .badge.pending   { background: rgba(245,158,11,0.15); color: var(--warning); }
+    .badge.confirmed { background: rgba(14,165,233,0.15); color: var(--brand); }
+    .badge.delivered { background: rgba(16,185,129,0.15); color: var(--success); }
+    .badge.cancelled { background: rgba(239,68,68,0.12);  color: var(--danger); }
+
+    /* Order actions */
+    .order-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .act-btn {
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-family: Inter;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .act-btn:hover { color: var(--text); border-color: #374151; }
+    .act-btn.confirm { border-color: var(--brand); color: var(--brand); }
+    .act-btn.confirm:hover { background: rgba(14,165,233,0.1); }
+    .act-btn.deliver { border-color: var(--success); color: var(--success); }
+    .act-btn.deliver:hover { background: rgba(16,185,129,0.1); }
+    .act-btn.cancel  { border-color: var(--danger); color: var(--danger); }
+    .act-btn.cancel:hover { background: rgba(239,68,68,0.1); }
+
+    /* Empty / Loading states */
+    .empty-state {
+      padding: 48px;
+      text-align: center;
+      color: var(--muted);
+    }
+    .empty-state p { margin-top: 8px; font-size: 0.9rem; }
+
+    /* Login screen */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+    }
+    .login-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      text-align: center;
+      max-width: 380px;
+      width: 90%;
+    }
+    .login-box h2 { margin-bottom: 6px; }
+    .login-box p  { color: var(--muted); font-size: 0.9rem; margin-bottom: 24px; }
+    .btn-google {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 24px;
+      background: white;
+      color: #1f2937;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-family: Inter;
+      font-size: 0.95rem;
+      cursor: pointer;
+      width: 100%;
+      transition: 0.2s;
+    }
+    .btn-google:hover { background: #f3f4f6; }
+    .access-denied {
+      color: var(--danger);
+      font-size: 0.85rem;
+      margin-top: 14px;
+    }
+
+    #admin-dashboard { display: none; }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 60px; }
+      .sidebar-logo, .menu-item span, .sidebar-footer p, #admin-info { display: none; }
+      .main { margin-left: 60px; width: calc(100% - 60px); }
+      .stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div id="login-screen">
+  <div class="login-box">
+    <div style="font-size:2.5rem;margin-bottom:14px">🔐</div>
+    <h2>Admin Access</h2>
+    <p>DS GADGETS admin panel. Only authorized accounts can access.</p>
+    <button class="btn-google" onclick="handleSignIn()">
+      <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Sign in with Google
+    </button>
+    <p class="access-denied" id="denied-msg" style="display:none">
+      ❌ Access denied. ඔයාගේ account admin list එකේ නෑ.
+    </p>
+  </div>
+</div>
+
+<!-- Admin Dashboard -->
+<div id="admin-dashboard">
+  <div class="layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <h2>DS GADGETS</h2>
+        <p>Admin Panel</p>
+      </div>
+      <div class="sidebar-menu">
+        <div class="menu-item active">
+          <span class="menu-icon">📦</span>
+          <span>Orders</span>
+        </div>
+        <div class="menu-item" onclick="window.open('order.html')">
+          <span class="menu-icon">🛒</span>
+          <span>Order Page</span>
+        </div>
+        <div class="menu-item" onclick="window.open('index.html')">
+          <span class="menu-icon">🌐</span>
+          <span>View Site</span>
+        </div>
+      </div>
+      <div class="sidebar-footer">
+        <div id="admin-info"></div>
+        <button class="btn-sm" onclick="handleSignOut()">Sign out</button>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="main">
+      <div class="topbar">
+        <div>
+          <h1>📦 Orders Dashboard</h1>
+          <p id="last-refresh">Loading orders...</p>
+        </div>
+        <button class="btn-sm" onclick="loadOrders()" style="padding:8px 18px">🔄 Refresh</button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-label">Total Orders</div>
+          <div class="stat-value blue" id="stat-total">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending</div>
+          <div class="stat-value yellow" id="stat-pending">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Confirmed</div>
+          <div class="stat-value blue" id="stat-confirmed">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Delivered</div>
+          <div class="stat-value green" id="stat-delivered">0</div>
+        </div>
+      </div>
+
+      <!-- Orders -->
+      <div class="orders-panel">
+        <div class="orders-header">
+          <h3>All Orders</h3>
+          <div class="filters">
+            <button class="filter-btn active" onclick="filterOrders('all', this)">All</button>
+            <button class="filter-btn" onclick="filterOrders('pending', this)">Pending</button>
+            <button class="filter-btn" onclick="filterOrders('confirmed', this)">Confirmed</button>
+            <button class="filter-btn" onclick="filterOrders('delivered', this)">Delivered</button>
+          </div>
+        </div>
+        <div id="orders-list">
+          <div class="empty-state">
+            <div>⏳</div>
+            <p>Loading orders...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, collection, getDocs, doc, updateDoc, query, orderBy }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+  apiKey: "AIzaSyCfdetDqm_ldrGLwtzYtTJL4Tad0Q3GIxQ",
+  authDomain: "ds-gadgets.firebaseapp.com",
+  projectId: "ds-gadgets",
+  storageBucket: "ds-gadgets.firebasestorage.app",
+  messagingSenderId: "129602203125",
+  appId: "1:129602203125:web:6630ac7fadcd25ecc884bc",
+  measurementId: "G-727NV9G2SH"
+};
+
+  const ADMIN_EMAILS = [
+    "pubwkon978@gmail.com",
+    // "anotheremail@gmail.com"
+  ];
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+
+  let allOrders = [];
+  let currentFilter = 'all';
+
+  // ---- Auth ----
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      showLogin();
+      return;
+    }
+    if (!ADMIN_EMAILS.includes(user.email)) {
+      document.getElementById('denied-msg').style.display = 'block';
+      await signOut(auth);
+      return;
+    }
+    // Admin access granted
+    showDashboard(user);
+    loadOrders();
+  });
+
+  function showLogin() {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('admin-dashboard').style.display = 'none';
+  }
+
+  function showDashboard(user) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-dashboard').style.display = 'block';
+    document.getElementById('admin-info').innerHTML =
+      `${user.photoURL ? `<img src="${user.photoURL}" alt="">` : ''}${user.displayName || user.email}`;
+  }
+
+  // ---- Load Orders ----
+  window.loadOrders = async () => {
+    try {
+      const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+      const snapshot = await getDocs(q);
+      allOrders = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      updateStats();
+      renderOrders();
+
+      const now = new Date();
+      document.getElementById('last-refresh').textContent =
+        `Last updated: ${now.toLocaleTimeString()}  •  ${allOrders.length} orders total`;
+    } catch (e) {
+      document.getElementById('orders-list').innerHTML =
+        `<div class="empty-state">❌<p>Error loading orders: ${e.message}</p></div>`;
+    }
+  };
+
+  function updateStats() {
+    document.getElementById('stat-total').textContent     = allOrders.length;
+    document.getElementById('stat-pending').textContent   = allOrders.filter(o => o.status === 'pending').length;
+    document.getElementById('stat-confirmed').textContent = allOrders.filter(o => o.status === 'confirmed').length;
+    document.getElementById('stat-delivered').textContent = allOrders.filter(o => o.status === 'delivered').length;
+  }
+
+  window.filterOrders = (filter, btn) => {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderOrders();
+  };
+
+  function renderOrders() {
+    const list = document.getElementById('orders-list');
+    const filtered = currentFilter === 'all'
+      ? allOrders
+      : allOrders.filter(o => o.status === currentFilter);
+
+    if (!filtered.length) {
+      list.innerHTML = `<div class="empty-state">📭<p>No ${currentFilter} orders found.</p></div>`;
+      return;
+    }
+
+    list.innerHTML = filtered.map(order => {
+      const ts = order.createdAt?.toDate?.();
+      const dateStr = ts ? ts.toLocaleString('en-GB', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }) : 'N/A';
+      const initial = (order.customerName || order.customerEmail || '?')[0].toUpperCase();
+      const photo = order.customerPhoto ? `<img src="${order.customerPhoto}" alt="">` : initial;
+
+      const actions = getStatusActions(order);
+
+      return `
+      <div class="order-card" id="card-${order.id}">
+        <div class="customer-avatar">${photo}</div>
+        <div class="order-details">
+          <div class="order-top">
+            <span class="customer-name">${escHtml(order.customerName || 'Unknown')}</span>
+            <span class="badge ${order.status}">${order.status}</span>
+            <span class="order-id">#${order.id.substring(0, 8)}</span>
+          </div>
+          <div class="product-info">
+            <strong>${escHtml(order.productName)}</strong>
+            &nbsp;·&nbsp; ${escHtml(order.category)}
+            &nbsp;·&nbsp; Qty: ${order.quantity}
+          </div>
+          <div class="order-meta">
+            <span class="meta-item">📱 ${escHtml(order.phone)}</span>
+            <span class="meta-item">📍 ${escHtml(order.address.substring(0, 50))}${order.address.length > 50 ? '...' : ''}</span>
+            <span class="meta-item">📧 ${escHtml(order.customerEmail)}</span>
+            <span class="meta-item">🕐 ${dateStr}</span>
+            ${order.notes ? `<span class="meta-item">💬 ${escHtml(order.notes)}</span>` : ''}
+          </div>
+        </div>
+        <div class="order-actions">${actions}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function getStatusActions(order) {
+    if (order.status === 'pending') {
+      return `<button class="act-btn confirm" onclick="updateStatus('${order.id}','confirmed')">✓ Confirm</button>
+              <button class="act-btn cancel"  onclick="updateStatus('${order.id}','cancelled')">✕ Cancel</button>`;
+    }
+    if (order.status === 'confirmed') {
+      return `<button class="act-btn deliver" onclick="updateStatus('${order.id}','delivered')">📦 Delivered</button>
+              <button class="act-btn cancel"  onclick="updateStatus('${order.id}','cancelled')">✕ Cancel</button>`;
+    }
+    return `<span style="font-size:0.8rem;color:var(--muted)">${order.status}</span>`;
+  }
+
+  window.updateStatus = async (orderId, newStatus) => {
+    try {
+      await updateDoc(doc(db, "orders", orderId), { status: newStatus });
+      // Update locally
+      const idx = allOrders.findIndex(o => o.id === orderId);
+      if (idx !== -1) allOrders[idx].status = newStatus;
+      updateStats();
+      renderOrders();
+    } catch (e) {
+      alert("Update failed: " + e.message);
+    }
+  };
+
+  function escHtml(str = '') {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ---- Sign In / Out ----
+  window.handleSignIn = async () => {
+    document.getElementById('denied-msg').style.display = 'none';
+    try {
+      await signInWithPopup(auth, provider);
+    } catch(e) {
+      alert("Login failed: " + e.message);
+    }
+  };
+
+  window.handleSignOut = async () => {
+    await signOut(auth);
+  };
+</script>
+</body>
+</html>

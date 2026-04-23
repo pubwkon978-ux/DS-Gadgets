@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="si">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Key bords | Product Showcase</title>
+  <style>
+    :root{
+      --bg: #0f172a;         /* dark slate */
+      --card: #111827;       /* dark card */
+      --muted: #94a3b8;      /* slate-300 */
+      --text: #e5e7eb;       /* gray-200 */
+      --accent: #22d3ee;     /* cyan-400 */
+      --ring: rgba(34,211,238,.5);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"Poppins", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(34,211,238,.12), transparent 60%),
+                  radial-gradient(900px 600px at 120% 10%, rgba(59,130,246,.12), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+    }
+    .container{max-width:1200px;margin:0 auto;padding:32px 20px}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+    h1{
+      margin:0;
+      font-size:clamp(28px, 4vw, 44px);
+      letter-spacing:.5px;
+      font-weight:700;
+      display:flex;gap:.6rem;align-items:center
+    }
+    h1 .dot{width:.65em;height:.65em;border-radius:50%;background:linear-gradient(135deg, var(--accent), #60a5fa);box-shadow:0 0 0 6px rgba(34,211,238,.08)}
+    .subtitle{color:var(--muted);font-size:14px}
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap:20px;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media (max-width: 640px){
+      .grid{grid-template-columns:1fr}
+    }
+
+    /* Card */
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.0)), var(--card);
+      border-radius:22px;
+      padding:16px;
+      position:relative;
+      overflow:hidden;
+      box-shadow: 0 2px 0 rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.05) inset;
+      transform-style: preserve-3d; /* enable 3D for child elements */
+      transition: box-shadow .25s ease, transform .25s ease, border-color .25s ease;
+      border:1px solid rgba(255,255,255,.06);
+    }
+    .card:hover{
+      box-shadow: 0 22px 40px rgba(0,0,0,.55), 0 0 0 1px rgba(34,211,238,.15) inset;
+      border-color: rgba(34,211,238,.25);
+    }
+    .ring{position:absolute;inset:-2px;border-radius:24px;pointer-events:none;box-shadow:0 0 0 0 var(--ring);transition:box-shadow .25s}
+    .card:hover .ring{box-shadow:0 0 0 6px var(--ring)}
+
+    .card-inner{display:grid;grid-template-columns:1fr;gap:14px}
+    .media{position:relative;border-radius:16px;overflow:hidden;background:#0b1220}
+    .media img{display:block;width:100%;height:240px;object-fit:cover;transform: translateZ(40px); /* pop forward in 3D */}
+
+    .badge{position:absolute;top:10px;left:10px;background:rgba(15,23,42,.65);backdrop-filter: blur(6px);color:#fff;padding:6px 10px;font-size:12px;border-radius:999px;border:1px solid rgba(255,255,255,.12)}
+
+    .content{display:flex;flex-direction:column;gap:10px;padding:2px 2px 6px}
+    .title{font-weight:600;font-size:18px;display:flex;align-items:center;gap:8px}
+    .price{margin-left:auto;font-weight:700}
+    .specs{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:14px;color:var(--muted)}
+    .specs div{background:rgba(255,255,255,.03);padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.06)}
+
+    .cta{display:flex;gap:10px;margin-top:6px}
+    .btn{flex:1;display:inline-flex;justify-content:center;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:var(--text);text-decoration:none;font-weight:600;transition:transform .2s ease, background .2s ease}
+    .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.06)}
+    .btn.primary{background:linear-gradient(135deg, var(--accent), #60a5fa);color:#0b1220;border:1px solid rgba(255,255,255,.0)}
+
+    /* Mouse-move emboss/tilt */
+    .tilt{perspective: 900px}
+    .tilt .card{transform: rotateX(var(--rx,0)) rotateY(var(--ry,0)) translateZ(0)}
+
+    /* Small helper */
+    .note{margin-top:18px;color:var(--muted);font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><span class="dot"></span> Key bords</h1>
+    </header>
+
+    <section class="grid">
+      <!-- Card 1 -->
+<div class="tilt">
+  <article class="card" data-tilt>
+    <span class="ring"></span>
+    <div class="card-inner">
+      <figure class="media">
+        <img src="bord1.jpg" />
+      </figure>
+      <div class="content">
+        <div class="title">AeroBass H700 <span class="price">Rs. 18,900</span></div>
+        <div class="specs">
+          <div>Bluetooth 5.3</div>
+          <div>40mm Drivers</div>
+          <div>ANC Active</div>
+          <div>Battery 50h</div>
+        </div>
+        <div class="cta">
+          <a class="btn" href="#" onclick="openModal()">More photos</a>
+          <a class="btn primary" href="#">Buy Now</a>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+
+
+      <!-- Card 2 -->
+      <div class="tilt">
+        <article class="card" data-tilt>
+          <span class="ring"></span>
+          <div class="card-inner">
+            <figure class="media">
+              <img src="bord2.jpg" />
+            </figure>
+            <div class="content">
+              <div class="title">StudioPro M50X <span class="price">Rs. 23,500</span></div>
+              <div class="specs">
+                <div>Impedance 38Ω</div>
+                <div>Closed-back</div>
+                <div>Detachable Cable</div>
+                <div>Foldable</div>
+              </div>
+              <div class="cta">
+                <a class="btn" href="#">More photos</a>
+                <a class="btn primary" href="#">Buy Now</a>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="tilt">
+        <article class="card" data-tilt>
+          <span class="ring"></span>
+          <div class="card-inner">
+            <figure class="media">
+              <img src="bord3.jpg" />
+            </figure>
+            <div class="content">
+              <div class="title">Viper GX-9 <span class="price">Rs. 14,750</span></div>
+              <div class="specs">
+                <div>7.1 Surround</div>
+                <div>Noise Mic</div>
+                <div>RGB Light</div>
+                <div>USB-A</div>
+              </div>
+              <div class="cta">
+                <a class="btn" href="#">More photos</a>
+                <a class="btn primary" href="#">Buy Now</a>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+<!-- Card 4 -->
+      <div class="tilt">
+        <article class="card" data-tilt>
+          <span class="ring"></span>
+          <div class="card-inner">
+            <figure class="media">
+              <img src="bord4.jpg" />
+            </figure>
+            <div class="content">
+              <div class="title">Viper GX-9 <span class="price">Rs. 14,750</span></div>
+              <div class="specs">
+                <div>7.1 Surround</div>
+                <div>Noise Mic</div>
+                <div>RGB Light</div>
+                <div>USB-A</div>
+              </div>
+              <div class="cta">
+                <a class="btn" href="#">More photos</a>
+                <a class="btn primary" href="#">Buy Now</a>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+<!-- Card 5 -->
+      <div class="tilt">
+        <article class="card" data-tilt>
+          <span class="ring"></span>
+          <div class="card-inner">
+            <figure class="media">
+              <img src="bord5.jpg" />
+            </figure>
+            <div class="content">
+              <div class="title">Viper GX-9 <span class="price">Rs. 14,750</span></div>
+              <div class="specs">
+                <div>7.1 Surround</div>
+                <div>Noise Mic</div>
+                <div>RGB Light</div>
+                <div>USB-A</div>
+              </div>
+              <div class="cta">
+                <a class="btn" href="#">More photos</a>
+                <a class="btn primary" href="#">Buy Now</a>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+<!-- Card 6 -->
+      <div class="tilt">
+        <article class="card" data-tilt>
+          <span class="ring"></span>
+          <div class="card-inner">
+            <figure class="media">
+              <img src="bord6.jpg" />
+            </figure>
+            <div class="content">
+              <div class="title">AeroBass H700 <span class="price">Rs. 18,900</span></div>
+              <div class="specs">
+                <div>Bluetooth 5.3</div>
+                <div>40mm Drivers</div>
+                <div>ANC Active</div>
+                <div>Battery 50h</div>
+              </div>
+              <div class="cta">
+                <a class="btn" href="#">More photos</a>
+                <a class="btn primary" href="#">Buy Now</a>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+
+    </section>
+
+  </div>
+
+  <script>
+    // Mouse-move emboss/tilt effect — lightweight vanilla JS
+    const cards = document.querySelectorAll('[data-tilt]');
+    const damp = (v, d=14) => (v / d).toFixed(3);
+
+    cards.forEach(card => {
+      const handleMove = (e) => {
+        const r = card.getBoundingClientRect();
+        const cx = r.left + r.width/2;
+        const cy = r.top + r.height/2;
+        const dx = e.clientX - cx;
+        const dy = e.clientY - cy;
+        // rotateY follows X movement, rotateX follows Y movement (invert for natural feel)
+        card.style.setProperty('--ry', damp(dx));
+        card.style.setProperty('--rx', damp(-dy));
+      };
+      const reset = () => {
+        card.style.setProperty('--ry', 0);
+        card.style.setProperty('--rx', 0);
+      };
+      card.addEventListener('mousemove', handleMove);
+      card.addEventListener('mouseenter', handleMove);
+      card.addEventListener('mouseleave', reset);
+      card.addEventListener('touchmove', (e)=>{
+        if(!e.touches[0]) return; 
+        const t = e.touches[0];
+        const fake = { clientX: t.clientX, clientY: t.clientY };
+        handleMove(fake);
+      }, {passive:true});
+      card.addEventListener('touchend', reset);
+    });
+  </script>
+</body>
+</html>
