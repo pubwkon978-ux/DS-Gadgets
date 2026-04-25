@@ -105,6 +105,18 @@
     .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#10b981;color:white;padding:10px 24px;border-radius:30px;font-weight:600;font-size:.9rem;z-index:200;transition:transform .3s;white-space:nowrap}
     .toast.show{transform:translateX(-50%) translateY(0)}
 
+
+    /* ---- Image Slideshow ---- */
+    .slide-wrap{position:relative;width:100%;height:220px;overflow:hidden;border-radius:16px;background:#0b1220}
+    .slide-img{position:absolute;top:0;left:0;width:100%;height:220px;object-fit:cover;opacity:0;transition:opacity .35s ease;transform:translateZ(40px)}
+    .slide-img.active{opacity:1}
+    .slide-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.55);border:none;color:white;font-size:1.4rem;width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:5;transition:background .2s;line-height:1;padding:0}
+    .slide-arrow:hover{background:rgba(0,0,0,.8)}
+    .slide-arrow.left{left:8px}
+    .slide-arrow.right{right:8px}
+    .slide-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:5}
+    .slide-dots .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4);transition:background .2s}
+    .slide-dots .dot.active{background:white}
     @media(max-width:480px){
       .cart-drawer{width:100vw}
       .header-right{gap:8px}
@@ -196,10 +208,18 @@ function renderProducts(data) {
     return;
   }
   grid.innerHTML = data.map(p => {
-    const img = p.images && p.images[0]
-      ? `<img src="${esc(p.images[0])}" alt="${esc(p.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+    const imgs = (p.images && p.images.length) ? p.images : [];
+    const slideHtml = imgs.length > 1
+      ? `<div class="slide-wrap" id="sw-${p.id}">
+           ${imgs.map((u,i)=>`<img src="${esc(u)}" class="slide-img ${i===0?'active':''}" alt="${esc(p.name)}">`).join('')}
+           <button class="slide-arrow left" onclick="slideImg(event,'${p.id}',-1,${imgs.length})">&#8249;</button>
+           <button class="slide-arrow right" onclick="slideImg(event,'${p.id}',1,${imgs.length})">&#8250;</button>
+           <div class="slide-dots">${imgs.map((_,i)=>`<span class="dot ${i===0?'active':''}" id="dot-${p.id}-${i}"></span>`).join('')}</div>
+         </div>`
+      : imgs.length===1
+      ? `<img src="${esc(imgs[0])}" alt="${esc(p.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
       : '';
-    const ph = `<div class="media-placeholder" ${p.images&&p.images[0]?'style="display:none"':''}>📷</div>`;
+    const ph = `<div class="media-placeholder" ${imgs.length?'style="display:none"':''}>📷</div>`;
     const offerBadge = p.offerPrice ? `<div class="offer-badge">🔖 OFFER</div>` : '';
     const outBadge = p.stock <= 0 ? `<div class="out-badge">Out of Stock</div>` : '';
     const priceEl = p.offerPrice
@@ -218,7 +238,7 @@ function renderProducts(data) {
     return `<div class="tilt"><article class="card" data-tilt>
       <span class="ring"></span>
       <div class="card-inner">
-        <figure class="media">${img}${ph}${offerBadge}${outBadge}</figure>
+        <figure class="media">${slideHtml}${ph}${offerBadge}${outBadge}</figure>
         <div class="content">
           <div class="title">
             <span>${esc(p.name)}</span>
@@ -330,6 +350,22 @@ window.filterGrid = (f, btn) => {
   document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderProducts(f === 'all' ? products : products.filter(p => p.category === f));
+};
+
+// Slideshow control
+const slideState = {};
+window.slideImg = (e, id, dir, total) => {
+  e.preventDefault(); e.stopPropagation();
+  if (!slideState[id]) slideState[id] = 0;
+  const prev = slideState[id];
+  slideState[id] = (prev + dir + total) % total;
+  const cur = slideState[id];
+
+  const wrap = document.getElementById('sw-' + id);
+  if (!wrap) return;
+
+  wrap.querySelectorAll('.slide-img').forEach((img, i) => img.classList.toggle('active', i === cur));
+  wrap.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
 };
 
 function esc(s='') { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
