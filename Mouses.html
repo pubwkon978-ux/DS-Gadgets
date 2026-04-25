@@ -1,239 +1,340 @@
 <!doctype html>
 <html lang="si">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mouses | DS GADGETS</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Mouse | DS GADGETS</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg: #0f172a;
-      --card: #111827;
-      --muted: #94a3b8;
-      --text: #e5e7eb;
-      --accent: #22d3ee;
-      --ring: rgba(34,211,238,.5);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:"Poppins", system-ui, sans-serif;
-      background: radial-gradient(1200px 600px at 20% -10%, rgba(34,211,238,.12), transparent 60%),
-                  radial-gradient(900px 600px at 120% 10%, rgba(59,130,246,.12), transparent 60%),
-                  var(--bg);
-      color:var(--text);
-    }
+    :root{--bg:#0f172a;--card:#111827;--muted:#94a3b8;--text:#e5e7eb;--accent:#22d3ee;--ring:rgba(34,211,238,.5);--brand-2:#7c3aed}
+    *{box-sizing:border-box}html,body{height:100%}
+    body{margin:0;font-family:"Poppins",system-ui,sans-serif;
+      background:radial-gradient(1200px 600px at 20% -10%,rgba(34,211,238,.12),transparent 60%),
+                 radial-gradient(900px 600px at 120% 10%,rgba(59,130,246,.12),transparent 60%),var(--bg);
+      color:var(--text)}
     .container{max-width:1200px;margin:0 auto;padding:32px 20px}
-    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
-    h1{margin:0;font-size:clamp(28px,4vw,44px);letter-spacing:.5px;font-weight:700;display:flex;gap:.6rem;align-items:center}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:12px}
+    h1{margin:0;font-size:clamp(24px,4vw,44px);font-weight:700;display:flex;gap:.6rem;align-items:center}
     h1 .dot{width:.65em;height:.65em;border-radius:50%;background:linear-gradient(135deg,var(--accent),#60a5fa);box-shadow:0 0 0 6px rgba(34,211,238,.08)}
-    .back-btn{color:var(--muted);text-decoration:none;font-size:0.9rem;border:1px solid rgba(255,255,255,.1);padding:7px 16px;border-radius:20px;transition:all 0.2s;}
-    .back-btn:hover{color:var(--text);border-color:rgba(255,255,255,.25);}
+    .header-right{display:flex;align-items:center;gap:12px}
+    .back-btn{color:var(--muted);text-decoration:none;font-size:.9rem;border:1px solid rgba(255,255,255,.1);padding:7px 16px;border-radius:20px;transition:all .2s}
+    .back-btn:hover{color:var(--text);border-color:rgba(255,255,255,.25)}
 
+    /* Cart icon */
+    .cart-btn{position:relative;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.3);color:var(--accent);padding:8px 16px;border-radius:20px;font-size:.9rem;font-family:Poppins;cursor:pointer;transition:all .2s;text-decoration:none;display:flex;align-items:center;gap:6px}
+    .cart-btn:hover{background:rgba(34,211,238,.2)}
+    .cart-count{background:var(--accent);color:#0b1220;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
+
+    /* Filter tabs */
+    .filter-row{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+    .f-btn{padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--muted);font-size:.85rem;cursor:pointer;font-family:Poppins;transition:all .2s}
+    .f-btn.active,.f-btn:hover{background:var(--accent);color:#0b1220;border-color:var(--accent)}
+
+    /* Grid */
     .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
     @media(max-width:980px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media(max-width:640px){.grid{grid-template-columns:1fr}}
+    @media(max-width:580px){.grid{grid-template-columns:1fr}}
 
-    .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0)),var(--card);border-radius:22px;padding:16px;position:relative;overflow:hidden;box-shadow:0 2px 0 rgba(0,0,0,.25),0 0 0 1px rgba(255,255,255,.05) inset;transform-style:preserve-3d;transition:box-shadow .25s ease,transform .25s ease,border-color .25s ease;border:1px solid rgba(255,255,255,.06)}
+    /* Card */
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0)),var(--card);border-radius:22px;padding:16px;position:relative;overflow:hidden;box-shadow:0 2px 0 rgba(0,0,0,.25),0 0 0 1px rgba(255,255,255,.05) inset;transform-style:preserve-3d;transition:box-shadow .25s,border-color .25s;border:1px solid rgba(255,255,255,.06)}
     .card:hover{box-shadow:0 22px 40px rgba(0,0,0,.55),0 0 0 1px rgba(34,211,238,.15) inset;border-color:rgba(34,211,238,.25)}
     .ring{position:absolute;inset:-2px;border-radius:24px;pointer-events:none;box-shadow:0 0 0 0 var(--ring);transition:box-shadow .25s}
     .card:hover .ring{box-shadow:0 0 0 6px var(--ring)}
     .card-inner{display:grid;grid-template-columns:1fr;gap:14px}
     .media{position:relative;border-radius:16px;overflow:hidden;background:#0b1220}
-    .media img{display:block;width:100%;height:240px;object-fit:cover;transform:translateZ(40px)}
-    .badge{position:absolute;top:10px;left:10px;background:rgba(15,23,42,.65);backdrop-filter:blur(6px);color:#fff;padding:6px 10px;font-size:12px;border-radius:999px;border:1px solid rgba(255,255,255,.12)}
+    .media img{display:block;width:100%;height:220px;object-fit:cover;transform:translateZ(40px)}
+    .media-placeholder{width:100%;height:220px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:3rem}
+
+    /* Offer badge */
+    .offer-badge{position:absolute;top:10px;right:10px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:white;padding:4px 10px;font-size:.72rem;border-radius:20px;font-weight:700}
+    .out-badge{position:absolute;top:10px;left:10px;background:rgba(239,68,68,.8);color:white;padding:4px 10px;font-size:.72rem;border-radius:20px;font-weight:700}
+
     .content{display:flex;flex-direction:column;gap:10px;padding:2px 2px 6px}
-    .title{font-weight:600;font-size:18px;display:flex;align-items:center;gap:8px}
-    .price{margin-left:auto;font-weight:700;color:var(--accent)}
-    .specs{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:14px;color:var(--muted)}
+    .title{font-weight:600;font-size:1rem;display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+    .price-block{text-align:right;flex-shrink:0}
+    .price{font-weight:800;color:var(--accent);white-space:nowrap}
+    .price.offer{color:#9ca3af;text-decoration:line-through;font-size:.85rem;font-weight:600}
+    .offer-price{color:#10b981;font-weight:800}
+    .brand-model{font-size:.8rem;color:var(--muted)}
+    .specs{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.8rem;color:var(--muted)}
     .specs div{background:rgba(255,255,255,.03);padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.06)}
-    .cta{display:flex;gap:10px;margin-top:6px}
-    .btn{flex:1;display:inline-flex;justify-content:center;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:var(--text);text-decoration:none;font-weight:600;transition:transform .2s ease,background .2s ease}
-    .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.06)}
-    .btn.primary{background:linear-gradient(135deg,var(--accent),#60a5fa);color:#0b1220;border:1px solid rgba(255,255,255,0)}
+    .stock-low{font-size:.75rem;color:#f59e0b;font-weight:600}
+    .stock-out{font-size:.75rem;color:#ef4444;font-weight:600}
+
+    .cta{display:flex;gap:8px;margin-top:6px}
+    .btn{flex:1;display:inline-flex;justify-content:center;align-items:center;gap:6px;padding:9px 8px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:var(--text);text-decoration:none;font-weight:600;font-size:.82rem;cursor:pointer;font-family:Poppins;transition:transform .2s,background .2s}
+    .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.08)}
+    .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+    .btn.primary{background:linear-gradient(135deg,var(--accent),#60a5fa);color:#0b1220;border:none}
     .btn.primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(34,211,238,.3)}
+    .btn.cart{background:rgba(124,58,237,.2);border-color:rgba(124,58,237,.4);color:#a78bfa}
+    .btn.cart:hover{background:rgba(124,58,237,.3)}
+
     .tilt{perspective:900px}
-    .tilt .card{transform:rotateX(var(--rx,0)) rotateY(var(--ry,0)) translateZ(0)}
+    .tilt .card{transform:rotateX(var(--rx,0)) rotateY(var(--ry,0)) translateZ(0);transition:transform .1s}
+
+    /* Empty / Loading */
+    .state-box{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
+    .state-box .icon{font-size:3rem;margin-bottom:16px}
+    .state-box p{font-size:1rem}
+
+    /* Cart drawer */
+    .cart-drawer{position:fixed;top:0;right:-380px;width:380px;max-width:100vw;height:100vh;background:#0d1626;border-left:1px solid rgba(255,255,255,.08);z-index:50;transition:right .3s ease;display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,.5)}
+    .cart-drawer.open{right:0}
+    .cart-header{padding:20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center}
+    .cart-header h3{font-size:1.1rem;font-weight:700;margin:0}
+    .cart-close{background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;padding:4px}
+    .cart-items{flex:1;overflow-y:auto;padding:16px}
+    .cart-item{display:flex;gap:12px;padding:12px;background:rgba(255,255,255,.03);border-radius:10px;margin-bottom:10px;border:1px solid rgba(255,255,255,.06)}
+    .cart-item img{width:52px;height:52px;object-fit:cover;border-radius:8px;background:#0b1220;flex-shrink:0}
+    .cart-item-info{flex:1;min-width:0}
+    .cart-item-name{font-weight:600;font-size:.88rem;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .cart-item-price{color:var(--accent);font-weight:700;font-size:.85rem}
+    .cart-qty{display:flex;align-items:center;gap:8px;margin-top:6px}
+    .qty-btn{width:24px;height:24px;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:var(--text);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center}
+    .qty-val{font-size:.85rem;font-weight:600;min-width:20px;text-align:center}
+    .cart-remove{background:none;border:none;color:#ef4444;cursor:pointer;font-size:.8rem;margin-left:auto}
+    .cart-footer{padding:20px;border-top:1px solid rgba(255,255,255,.08)}
+    .cart-total{display:flex;justify-content:space-between;font-weight:700;font-size:1.1rem;margin-bottom:16px}
+    .cart-checkout{display:block;text-align:center;padding:12px;background:linear-gradient(135deg,var(--accent),#60a5fa);color:#0b1220;border-radius:12px;font-weight:700;text-decoration:none;font-family:Poppins}
+    .cart-empty{text-align:center;padding:40px 20px;color:var(--muted)}
+    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40}
+    .overlay.show{display:block}
+
+    /* Toast */
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#10b981;color:white;padding:10px 24px;border-radius:30px;font-weight:600;font-size:.9rem;z-index:200;transition:transform .3s;white-space:nowrap}
+    .toast.show{transform:translateX(-50%) translateY(0)}
+
+    @media(max-width:480px){
+      .cart-drawer{width:100vw}
+      .header-right{gap:8px}
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1><span class="dot"></span> Mouses</h1>
-      <a class="back-btn" href="index.html">← Back to Home</a>
+      <h1><span class="dot"></span> Mouse</h1>
+      <div class="header-right">
+        <a class="back-btn" href="index.html">← Home</a>
+        <button class="cart-btn" onclick="openCart()">
+          🛒 Cart <span class="cart-count" id="cart-count">0</span>
+        </button>
+      </div>
     </header>
 
-    <section class="grid">
+    <div class="filter-row" id="filter-row" style="display:none">
+      <button class="f-btn active" onclick="filterGrid('all',this)">All</button>
+    </div>
 
-      <!-- Card 1 -->
-      <div class="tilt">
-        <article class="card" data-tilt>
-          <span class="ring"></span>
-          <div class="card-inner">
-            <figure class="media">
-              <img src="mouse1.webp" alt="AeroBass H700" />
-            </figure>
-            <div class="content">
-              <div class="title">AeroBass H700 <span class="price">Rs. 18,900</span></div>
-              <div class="specs">
-                <div>Bluetooth 5.3</div>
-                <div>40mm Drivers</div>
-                <div>ANC Active</div>
-                <div>Battery 50h</div>
-              </div>
-              <div class="cta">
-                <a class="btn" href="#">More photos</a>
-                <a class="btn primary" href="order.html?product=AeroBass%20H700&category=Mouse&price=18900&img=mouse1.webp">🛒 Buy Now</a>
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="tilt">
-        <article class="card" data-tilt>
-          <span class="ring"></span>
-          <div class="card-inner">
-            <figure class="media">
-              <img src="mouse2.jpg" alt="StudioPro M50X" />
-            </figure>
-            <div class="content">
-              <div class="title">StudioPro M50X <span class="price">Rs. 23,500</span></div>
-              <div class="specs">
-                <div>Impedance 38Ω</div>
-                <div>Closed-back</div>
-                <div>Detachable Cable</div>
-                <div>Foldable</div>
-              </div>
-              <div class="cta">
-                <a class="btn" href="#">More photos</a>
-                <a class="btn primary" href="order.html?product=StudioPro%20M50X&category=Mouse&price=23500&img=mouse2.jpg">🛒 Buy Now</a>
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="tilt">
-        <article class="card" data-tilt>
-          <span class="ring"></span>
-          <div class="card-inner">
-            <figure class="media">
-              <img src="mouse3.jpg" alt="Viper GX-9" />
-            </figure>
-            <div class="content">
-              <div class="title">Viper GX-9 <span class="price">Rs. 14,750</span></div>
-              <div class="specs">
-                <div>7.1 Surround</div>
-                <div>Noise Mic</div>
-                <div>RGB Light</div>
-                <div>USB-A</div>
-              </div>
-              <div class="cta">
-                <a class="btn" href="#">More photos</a>
-                <a class="btn primary" href="order.html?product=Viper%20GX-9%20(Black)&category=Mouse&price=14750&img=mouse3.jpg">🛒 Buy Now</a>
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <!-- Card 4 -->
-      <div class="tilt">
-        <article class="card" data-tilt>
-          <span class="ring"></span>
-          <div class="card-inner">
-            <figure class="media">
-              <img src="mouse4.jpg" alt="Viper GX-9" />
-            </figure>
-            <div class="content">
-              <div class="title">Viper GX-9 <span class="price">Rs. 14,750</span></div>
-              <div class="specs">
-                <div>7.1 Surround</div>
-                <div>Noise Mic</div>
-                <div>RGB Light</div>
-                <div>USB-A</div>
-              </div>
-              <div class="cta">
-                <a class="btn" href="#">More photos</a>
-                <a class="btn primary" href="order.html?product=Viper%20GX-9%20(White)&category=Mouse&price=14750&img=mouse4.jpg">🛒 Buy Now</a>
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <!-- Card 5 -->
-      <div class="tilt">
-        <article class="card" data-tilt>
-          <span class="ring"></span>
-          <div class="card-inner">
-            <figure class="media">
-              <img src="mouse5.jpg" alt="Viper GX-9" />
-            </figure>
-            <div class="content">
-              <div class="title">Viper GX-9 <span class="price">Rs. 14,750</span></div>
-              <div class="specs">
-                <div>7.1 Surround</div>
-                <div>Noise Mic</div>
-                <div>RGB Light</div>
-                <div>USB-A</div>
-              </div>
-              <div class="cta">
-                <a class="btn" href="#">More photos</a>
-                <a class="btn primary" href="order.html?product=Viper%20GX-9%20(Red)&category=Mouse&price=14750&img=mouse5.jpg">🛒 Buy Now</a>
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <!-- Card 6 -->
-      <div class="tilt">
-        <article class="card" data-tilt>
-          <span class="ring"></span>
-          <div class="card-inner">
-            <figure class="media">
-              <img src="mouse6.jpg" alt="AeroBass H700" />
-            </figure>
-            <div class="content">
-              <div class="title">AeroBass H700 <span class="price">Rs. 18,900</span></div>
-              <div class="specs">
-                <div>Bluetooth 5.3</div>
-                <div>40mm Drivers</div>
-                <div>ANC Active</div>
-                <div>Battery 50h</div>
-              </div>
-              <div class="cta">
-                <a class="btn" href="#">More photos</a>
-                <a class="btn primary" href="order.html?product=AeroBass%20H700%20(Pro)&category=Mouse&price=18900&img=mouse6.jpg">🛒 Buy Now</a>
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-
+    <section class="grid" id="product-grid">
+      <div class="state-box"><div class="icon">⏳</div><p>Loading products...</p></div>
     </section>
   </div>
 
-  <script>
-    const cards = document.querySelectorAll('[data-tilt]');
-    const damp = (v, d=14) => (v / d).toFixed(3);
-    cards.forEach(card => {
-      const handleMove = (e) => {
-        const r = card.getBoundingClientRect();
-        const cx = r.left + r.width/2, cy = r.top + r.height/2;
-        card.style.setProperty('--ry', damp(e.clientX - cx));
-        card.style.setProperty('--rx', damp(-(e.clientY - cy)));
-      };
-      const reset = () => { card.style.setProperty('--ry',0); card.style.setProperty('--rx',0); };
-      card.addEventListener('mousemove', handleMove);
-      card.addEventListener('mouseenter', handleMove);
-      card.addEventListener('mouseleave', reset);
-    });
-  </script>
+  <!-- Cart Drawer -->
+  <div class="overlay" id="overlay" onclick="closeCart()"></div>
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-header">
+      <h3>🛒 Your Cart</h3>
+      <button class="cart-close" onclick="closeCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-total"><span>Total</span><span id="cart-total">Rs. 0</span></div>
+      <a href="#" class="cart-checkout" id="checkout-btn" onclick="checkout()">Proceed to Order →</a>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, query, where, orderBy, getDocs }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyCfdetDqm_ldrGLwtzYtTJL4Tad0Q3GIxQ",
+  authDomain:"ds-gadgets.firebaseapp.com",projectId:"ds-gadgets",
+  storageBucket:"ds-gadgets.firebasestorage.app",messagingSenderId:"129602203125",
+  appId:"1:129602203125:web:6630ac7fadcd25ecc884bc",measurementId:"G-727NV9G2SH"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+let products = [];
+let cart = JSON.parse(localStorage.getItem('ds_cart') || '[]');
+
+// Load products
+async function loadProducts() {
+  try {
+    const q = query(collection(db,"products"), where("category","==","Mouse"), orderBy("createdAt","desc"));
+    const snap = await getDocs(q);
+    products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderProducts(products);
+  } catch(e) {
+    // fallback without orderBy if index not ready
+    try {
+      const q2 = query(collection(db,"products"), where("category","==","Mouse"));
+      const snap2 = await getDocs(q2);
+      products = snap2.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderProducts(products);
+    } catch(e2) {
+      document.getElementById('product-grid').innerHTML =
+        `<div class="state-box"><div class="icon">❌</div><p>Error loading: ${e2.message}</p></div>`;
+    }
+  }
+  updateCartUI();
+}
+
+function renderProducts(data) {
+  const grid = document.getElementById('product-grid');
+  if (!data.length) {
+    grid.innerHTML = `<div class="state-box"><div class="icon">📭</div><p>No products available yet.<br>Check back soon!</p></div>`;
+    return;
+  }
+  grid.innerHTML = data.map(p => {
+    const img = p.images && p.images[0]
+      ? `<img src="${esc(p.images[0])}" alt="${esc(p.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      : '';
+    const ph = `<div class="media-placeholder" ${p.images&&p.images[0]?'style="display:none"':''}>📷</div>`;
+    const offerBadge = p.offerPrice ? `<div class="offer-badge">🔖 OFFER</div>` : '';
+    const outBadge = p.stock <= 0 ? `<div class="out-badge">Out of Stock</div>` : '';
+    const priceEl = p.offerPrice
+      ? `<div><div class="price offer">Rs.${Number(p.price).toLocaleString()}</div><div class="offer-price">Rs.${Number(p.offerPrice).toLocaleString()}</div></div>`
+      : `<div class="price">Rs.${Number(p.price).toLocaleString()}</div>`;
+    const stockEl = p.stock <= 0
+      ? `<div class="stock-out">❌ Out of Stock</div>`
+      : p.stock <= 3
+      ? `<div class="stock-low">⚠️ Only ${p.stock} left!</div>`
+      : '';
+    const disabled = p.stock <= 0 ? 'disabled' : '';
+    const buyPrice = p.offerPrice || p.price;
+    const imgParam = p.images && p.images[0] ? encodeURIComponent(p.images[0]) : '';
+    const buyUrl = `order.html?product=${encodeURIComponent(p.name)}&category=${encodeURIComponent(p.category)}&price=${buyPrice}&img=${imgParam}`;
+
+    return `<div class="tilt"><article class="card" data-tilt>
+      <span class="ring"></span>
+      <div class="card-inner">
+        <figure class="media">${img}${ph}${offerBadge}${outBadge}</figure>
+        <div class="content">
+          <div class="title">
+            <span>${esc(p.name)}</span>
+            <div class="price-block">${priceEl}</div>
+          </div>
+          <div class="brand-model">${esc(p.brand)} · ${esc(p.model)}</div>
+          ${p.description ? `<div style="font-size:.8rem;color:var(--muted)">${esc(p.description)}</div>` : ''}
+          ${stockEl}
+          <div class="cta">
+            <button class="btn cart" onclick='addToCart(${JSON.stringify({id:p.id,name:p.name,price:buyPrice,img:p.images&&p.images[0]?p.images[0]:""})})' ${disabled}>🛒 Cart</button>
+            <a class="btn primary ${p.stock<=0?'disabled':''}" href="${p.stock>0?buyUrl:'#'}" ${p.stock<=0?'onclick="return false"':''}>⚡ Buy Now</a>
+          </div>
+        </div>
+      </div>
+    </article></div>`;
+  }).join('');
+
+  // Tilt effect
+  document.querySelectorAll('[data-tilt]').forEach(card => {
+    const mv = e => {
+      const r=card.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+      card.style.setProperty('--ry',((e.clientX-cx)/14).toFixed(2));
+      card.style.setProperty('--rx',(-(e.clientY-cy)/14).toFixed(2));
+    };
+    const rs = () => { card.style.setProperty('--ry',0); card.style.setProperty('--rx',0); };
+    card.addEventListener('mousemove',mv); card.addEventListener('mouseenter',mv); card.addEventListener('mouseleave',rs);
+  });
+}
+
+// CART
+window.addToCart = item => {
+  const existing = cart.find(c => c.id === item.id);
+  if (existing) { existing.qty++; }
+  else { cart.push({ ...item, qty: 1 }); }
+  saveCart(); updateCartUI();
+  showToast(`✅ ${item.name} added to cart!`);
+};
+
+window.removeFromCart = id => {
+  cart = cart.filter(c => c.id !== id);
+  saveCart(); updateCartUI(); renderCartItems();
+};
+
+window.changeQty = (id, delta) => {
+  const item = cart.find(c => c.id === id);
+  if (!item) return;
+  item.qty = Math.max(1, item.qty + delta);
+  saveCart(); updateCartUI(); renderCartItems();
+};
+
+function saveCart() { localStorage.setItem('ds_cart', JSON.stringify(cart)); }
+
+function updateCartUI() {
+  const total = cart.reduce((s,c) => s + c.qty, 0);
+  document.getElementById('cart-count').textContent = total;
+}
+
+function renderCartItems() {
+  const el = document.getElementById('cart-items');
+  if (!cart.length) {
+    el.innerHTML = `<div class="cart-empty">🛒<p style="margin-top:12px">Cart is empty</p></div>`;
+    document.getElementById('cart-total').textContent = 'Rs. 0';
+    return;
+  }
+  el.innerHTML = cart.map(c => `
+    <div class="cart-item">
+      <img src="${esc(c.img)}" alt="${esc(c.name)}" onerror="this.src=''">
+      <div class="cart-item-info">
+        <div class="cart-item-name">${esc(c.name)}</div>
+        <div class="cart-item-price">Rs.${Number(c.price).toLocaleString()}</div>
+        <div class="cart-qty">
+          <button class="qty-btn" onclick="changeQty('${c.id}',-1)">−</button>
+          <span class="qty-val">${c.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${c.id}',1)">+</button>
+          <button class="cart-remove" onclick="removeFromCart('${c.id}')">🗑️ Remove</button>
+        </div>
+      </div>
+    </div>`).join('');
+  const total = cart.reduce((s,c) => s + c.price * c.qty, 0);
+  document.getElementById('cart-total').textContent = `Rs.${total.toLocaleString()}`;
+}
+
+window.openCart = () => {
+  renderCartItems();
+  document.getElementById('cart-drawer').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+};
+window.closeCart = () => {
+  document.getElementById('cart-drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+};
+
+window.checkout = () => {
+  if (!cart.length) { alert("Cart is empty!"); return; }
+  // Build cart summary for order page
+  const names = cart.map(c => `${c.name} x${c.qty}`).join(', ');
+  const total = cart.reduce((s,c) => s + c.price * c.qty, 0);
+  const firstImg = cart[0].img || '';
+  window.location.href = `order.html?product=${encodeURIComponent(names)}&category=Cart&price=${total}&img=${encodeURIComponent(firstImg)}&cart=1`;
+};
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+window.filterGrid = (f, btn) => {
+  document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(f === 'all' ? products : products.filter(p => p.category === f));
+};
+
+function esc(s='') { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+loadProducts();
+</script>
 </body>
 </html>
