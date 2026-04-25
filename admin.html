@@ -255,9 +255,32 @@
             <div class="form-group full"><label>Offer Price (Rs.) — optional (sale price)</label><input id="p-offer" type="number" placeholder="e.g. 12500"/></div>
             <div class="form-group full"><label>Description</label><textarea id="p-desc" placeholder="Short product description..."></textarea></div>
             <div class="form-group full">
-              <label>Image URLs (one per line, max 4 images)</label>
-              <textarea id="p-images" placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg" style="min-height:80px" oninput="previewImages()"></textarea>
-              <div class="img-preview" id="img-preview-box"></div>
+              <label>Product Images (max 4) — Upload හෝ URL දාන්න</label>
+              <!-- Tab buttons -->
+              <div style="display:flex;gap:8px;margin-bottom:10px">
+                <button type="button" class="img-tab active" id="tab-upload" onclick="switchTab('upload')" style="padding:6px 14px;border-radius:20px;border:1px solid var(--brand);background:var(--brand);color:white;font-size:.8rem;cursor:pointer;font-family:Inter">📷 Upload Photos</button>
+                <button type="button" class="img-tab" id="tab-url" onclick="switchTab('url')" style="padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.8rem;cursor:pointer;font-family:Inter">🔗 Image URL</button>
+              </div>
+              <!-- Upload section -->
+              <div id="upload-section">
+                <div id="drop-zone" onclick="document.getElementById('p-file-input').click()" style="border:2px dashed var(--border);border-radius:10px;padding:28px;text-align:center;cursor:pointer;transition:border-color .2s;background:#0a1220">
+                  <div style="font-size:2rem;margin-bottom:8px">📷</div>
+                  <div style="font-size:.9rem;color:var(--muted)">Click to select photos <br><span style="font-size:.78rem">Max 4 photos • JPG, PNG, WEBP</span></div>
+                </div>
+                <input type="file" id="p-file-input" multiple accept="image/*" style="display:none" onchange="handleFileSelect(event)"/>
+                <!-- Upload progress -->
+                <div id="upload-progress" style="display:none;margin-top:10px">
+                  <div style="font-size:.82rem;color:var(--muted);margin-bottom:6px" id="upload-status">Uploading...</div>
+                  <div style="background:var(--border);border-radius:4px;height:6px"><div id="progress-bar" style="background:var(--brand);height:6px;border-radius:4px;width:0%;transition:width .3s"></div></div>
+                </div>
+              </div>
+              <!-- URL section -->
+              <div id="url-section" style="display:none">
+                <textarea id="p-images" placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg" style="min-height:80px;width:100%;padding:10px 12px;background:#0a1220;border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:Inter;font-size:.9rem;outline:none;resize:vertical" oninput="previewImages()"></textarea>
+              </div>
+              <!-- Uploaded image previews -->
+              <div class="img-preview" id="img-preview-box" style="margin-top:10px"></div>
+              <input type="hidden" id="p-images-final" />
             </div>
           </div>
           <div class="form-actions">
@@ -293,6 +316,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChang
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+// Cloudinary used for image upload (no Firebase Storage needed)
 
 const firebaseConfig = {
   apiKey:"AIzaSyCfdetDqm_ldrGLwtzYtTJL4Tad0Q3GIxQ",
@@ -302,6 +326,8 @@ const firebaseConfig = {
 };
 const ADMIN_EMAILS = ["pubwkon978@gmail.com"];
 const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getFirestore(app), prov=new GoogleAuthProvider();
+const CLOUDINARY_CLOUD = 'dzta29win';
+const CLOUDINARY_PRESET = 'boqv3do0';
 let allOrders=[], allProducts=[], oFilter='all', pFilter='all';
 
 // AUTH
@@ -406,17 +432,27 @@ function renderProducts(){
 }
 window.addProduct=async()=>{
   const n=v('p-name'),mo=v('p-model'),b=v('p-brand'),cat=v('p-category'),pr=v('p-price'),st=v('p-stock'),of=v('p-offer'),de=v('p-desc');
-  const imgs=document.getElementById('p-images').value.trim().split('\n').map(s=>s.trim()).filter(Boolean).slice(0,4);
+  // Get images: from upload list OR from URL textarea
+  let imgs = uploadedUrls.length > 0
+    ? uploadedUrls.slice(0,4)
+    : (document.getElementById('p-images')||{value:''}).value.trim().split('\n').map(s=>s.trim()).filter(Boolean).slice(0,4);
   if(!n||!mo||!b||!pr||!st){alert("Mandatory fields (*) fill කරන්න.");return}
   try{
-    const ref=await addDoc(collection(db,"products"),{name:n,model:mo,brand:b,category:cat,price:+pr,offerPrice:of?+of:null,stock:+st,description:de,images:imgs,createdAt:serverTimestamp()});
-    allProducts.unshift({id:ref.id,name:n,model:mo,brand:b,category:cat,price:+pr,offerPrice:of?+of:null,stock:+st,description:de,images:imgs});
+    const docRef=await addDoc(collection(db,"products"),{name:n,model:mo,brand:b,category:cat,price:+pr,offerPrice:of?+of:null,stock:+st,description:de,images:imgs,createdAt:serverTimestamp()});
+    allProducts.unshift({id:docRef.id,name:n,model:mo,brand:b,category:cat,price:+pr,offerPrice:of?+of:null,stock:+st,description:de,images:imgs});
     renderProducts(); clearForm();
     document.getElementById('prod-count').textContent=`${allProducts.length} products total`;
     alert("✅ Product added!");
   }catch(e){alert(e.message)}
 };
-window.clearForm=()=>{['p-name','p-model','p-brand','p-price','p-stock','p-offer','p-desc','p-images'].forEach(id=>document.getElementById(id).value='');document.getElementById('img-preview-box').innerHTML=''};
+window.clearForm=()=>{
+  ['p-name','p-model','p-brand','p-price','p-stock','p-offer','p-desc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  const pi=document.getElementById('p-images'); if(pi) pi.value='';
+  document.getElementById('img-preview-box').innerHTML='';
+  uploadedUrls=[];
+  const dz=document.getElementById('drop-zone');
+  if(dz) dz.style.borderColor='var(--border)';
+};
 window.previewImages=()=>{
   const urls=document.getElementById('p-images').value.trim().split('\n').map(s=>s.trim()).filter(Boolean).slice(0,4);
   document.getElementById('img-preview-box').innerHTML=urls.map(u=>`<img class="img-thumb" src="${u}" onerror="this.style.opacity='.2'">`).join('');
@@ -447,6 +483,106 @@ window.saveEdit=async()=>{
     renderProducts(); closeEditModal(); alert("✅ Updated!");
   }catch(e){alert(e.message)}
 };
+// ---- IMAGE UPLOAD HELPERS ----
+let uploadedUrls = [];
+
+window.switchTab = (tab) => {
+  const isUpload = tab === 'upload';
+  document.getElementById('upload-section').style.display = isUpload ? 'block' : 'none';
+  document.getElementById('url-section').style.display   = isUpload ? 'none' : 'block';
+  document.getElementById('tab-upload').style.background = isUpload ? 'var(--brand)' : 'transparent';
+  document.getElementById('tab-upload').style.color      = isUpload ? 'white' : 'var(--muted)';
+  document.getElementById('tab-upload').style.borderColor= isUpload ? 'var(--brand)' : 'var(--border)';
+  document.getElementById('tab-url').style.background    = isUpload ? 'transparent' : 'var(--brand)';
+  document.getElementById('tab-url').style.color         = isUpload ? 'var(--muted)' : 'white';
+  document.getElementById('tab-url').style.borderColor   = isUpload ? 'var(--border)' : 'var(--brand)';
+};
+
+window.handleFileSelect = async (event) => {
+  const files = Array.from(event.target.files).slice(0, 4 - uploadedUrls.length);
+  if (!files.length) return;
+  const prog = document.getElementById('upload-progress');
+  const bar  = document.getElementById('progress-bar');
+  const stat = document.getElementById('upload-status');
+  prog.style.display = 'block';
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    stat.textContent = `Uploading ${i+1}/${files.length}: ${file.name}...`;
+    bar.style.width = '0%';
+
+    try {
+      const url = await uploadImage(file, (pct) => { bar.style.width = pct + '%'; });
+      uploadedUrls.push(url);
+      addPreviewThumb(url);
+    } catch(e) {
+      alert('Upload failed: ' + e.message);
+    }
+  }
+
+  stat.textContent = `✅ ${uploadedUrls.length} image(s) uploaded!`;
+  bar.style.width = '100%';
+  event.target.value = '';
+
+  if (uploadedUrls.length >= 4) {
+    document.getElementById('drop-zone').style.borderColor = 'var(--success)';
+    document.getElementById('drop-zone').innerHTML = '<div style="font-size:1.5rem">✅</div><div style="font-size:.85rem;color:var(--success)">Max 4 images uploaded</div>';
+  }
+};
+
+function uploadImage(file, onProgress) {
+  return new Promise((resolve, reject) => {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('upload_preset', CLOUDINARY_PRESET);
+    fd.append('folder', 'ds-gadgets/products');
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`);
+
+    xhr.upload.onprogress = e => {
+      if (e.lengthComputable) onProgress(Math.round(e.loaded / e.total * 100));
+    };
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        const res = JSON.parse(xhr.responseText);
+        resolve(res.secure_url);
+      } else {
+        reject(new Error('Upload failed: ' + xhr.responseText));
+      }
+    };
+    xhr.onerror = () => reject(new Error('Network error during upload'));
+    xhr.send(fd);
+  });
+}
+
+function addPreviewThumb(url) {
+  const box  = document.getElementById('img-preview-box');
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'position:relative;display:inline-block';
+  wrap.innerHTML = `<img src="${url}" class="img-thumb" style="width:70px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--border)">
+    <button onclick="removeUploadedImg('${url}',this.parentElement)" style="position:absolute;top:-6px;right:-6px;background:#ef4444;border:none;border-radius:50%;width:18px;height:18px;color:white;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>`;
+  box.appendChild(wrap);
+}
+
+window.removeUploadedImg = (url, el) => {
+  uploadedUrls = uploadedUrls.filter(u => u !== url);
+  el.remove();
+};
+
+// Drag and drop support
+document.addEventListener('DOMContentLoaded', () => {
+  const dz = document.getElementById('drop-zone');
+  if (!dz) return;
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.style.borderColor='var(--brand)'; });
+  dz.addEventListener('dragleave', () => { dz.style.borderColor='var(--border)'; });
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.style.borderColor='var(--border)';
+    const dt = e.dataTransfer;
+    if (dt.files.length) handleFileSelect({ target: { files: dt.files, value: '' } });
+  });
+});
+
 function v(id){return document.getElementById(id).value.trim()}
 function esc(s=''){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 </script>
