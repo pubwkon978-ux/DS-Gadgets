@@ -22,8 +22,7 @@
     .nav-links{display:flex;align-items:center;gap:6px}
     .nav-link{padding:8px 14px;border-radius:10px;font-size:.9rem;font-weight:500;color:var(--muted);transition:all .2s;cursor:pointer;border:none;background:none;font-family:Inter}
     .nav-link:hover{color:var(--text);background:rgba(255,255,255,.05)}
-    .nav-cart{display:flex;align-items:center;gap:7px;padding:8px 16px;border-radius:20px;background:rgba(14,165,233,.12);border:1px solid rgba(14,165,233,.25);color:var(--brand);font-weight:600;cursor:pointer;font-family:Inter;font-size:.9rem;transition:.2s}
-    .nav-cart:hover{background:rgba(14,165,233,.22)}
+    .nav-cart{display:flex;align-items:center;gap:7px;padding:8px 16px;border-radius:20px;background:rgba(14,165,233,.12);border:1px solid rgba(14,165,233,.25);color:var(--brand);font-weight:600;cursor:pointer;font-family:Inter;font-size:.9rem;transition:.2s}.nav-cart:hover{background:rgba(14,165,233,.22)}.cart-icon{font-size:1rem;line-height:1;}
     .cart-badge{background:var(--brand);color:white;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;min-width:18px}
     .orders-btn{padding:8px 14px;border-radius:20px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);color:#a78bfa;font-weight:600;cursor:pointer;font-family:Inter;font-size:.85rem;transition:.2s;display:none}
     .orders-btn:hover{background:rgba(124,58,237,.25)}
@@ -180,15 +179,12 @@
   <div class="nav-links">
     <a href="#categories" class="nav-link">Products</a>
     <a href="#featured" class="nav-link">Featured</a>
-    <button class="nav-link keep" onclick="openContact()">Contact</button>
-    <button class="orders-btn" id="ordersBtn" onclick="toggleOrders()">📋 My Orders</button>
     <button class="nav-cart keep" onclick="openCart()">
   <span class="cart-icon">🛒</span>
   <span class="cart-badge" id="cart-count">0</span>
 </button>
   </div>
 </nav>
-
 <!-- HERO -->
 <div class="hero">
   <video class="hero-video" autoplay muted loop playsinline src="video.mp4"></video>
