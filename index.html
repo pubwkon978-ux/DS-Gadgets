@@ -165,12 +165,16 @@
       .cart-drawer{width:100vw}
       .order-row{grid-template-columns:42px 1fr}
       .obadge{grid-column:1/-1}
-      @media(max-width:100px){
-      .hero-video{
-       object-fit:cover;
-       object-position:center center;
-       transform:scale(1.15)
-    }
+      @media (max-width: 600px){
+  .hero-video{
+    width:100vw;
+    height:100vh;
+    object-fit:contain;
+    object-position:center center;
+    transform:none;
+    background:#000;
+  }
+}
   </style>
 </head>
 <body>
