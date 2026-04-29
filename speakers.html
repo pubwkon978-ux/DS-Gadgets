@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>speakers | DS GADGETS</title>
+  <title>Speakers | DS GADGETS</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root{--bg:#0f172a;--card:#111827;--muted:#94a3b8;--text:#e5e7eb;--accent:#22d3ee;--ring:rgba(34,211,238,.5);--brand-2:#7c3aed}
@@ -126,7 +126,7 @@
 <body>
   <div class="container">
     <header>
-      <h1><span class="dot"></span> speakers</h1>
+      <h1><span class="dot"></span> Speakers</h1>
       <div class="header-right">
         <a class="back-btn" href="index.html">← Home</a>
         <button class="cart-btn" onclick="openCart()">
@@ -182,14 +182,14 @@ let cart = JSON.parse(localStorage.getItem('ds_cart') || '[]');
 // Load products
 async function loadProducts() {
   try {
-    const q = query(collection(db,"products"), where("category","==","speakers"), orderBy("createdAt","desc"));
+    const q = query(collection(db,"products"), where("category","==","Speakers"), orderBy("createdAt","desc"));
     const snap = await getDocs(q);
     products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderProducts(products);
   } catch(e) {
     // fallback without orderBy if index not ready
     try {
-      const q2 = query(collection(db,"products"), where("category","==","speakers"));
+      const q2 = query(collection(db,"products"), where("category","==","Speakers"));
       const snap2 = await getDocs(q2);
       products = snap2.docs.map(d => ({ id: d.id, ...d.data() }));
       renderProducts(products);
@@ -264,7 +264,7 @@ function renderProducts(data) {
       card.style.setProperty('--rx',(-(e.clientY-cy)/14).toFixed(2));
     };
     const rs = () => { card.style.setProperty('--ry',0); card.style.setProperty('--rx',0); };
-    card.addEventListener('speakersmove',mv); card.addEventListener('speakersenter',mv); card.addEventListener('speakersleave',rs);
+    card.addEventListener('mousemove',mv); card.addEventListener('mouseenter',mv); card.addEventListener('mouseleave',rs);
   });
 }
 
@@ -354,7 +354,7 @@ window.filterGrid = (f, btn) => {
 
 // Slideshow control
 const slideState = {};
-window.slideImg = (e, id, dir, total) => {  
+window.slideImg = (e, id, dir, total) => {
   e.preventDefault(); e.stopPropagation();
   if (!slideState[id]) slideState[id] = 0;
   const prev = slideState[id];
