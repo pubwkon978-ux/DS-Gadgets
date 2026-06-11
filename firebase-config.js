@@ -5,12 +5,13 @@ import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimest
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyCfdetDqm_ldrGLwtzYtTJL4Tad0Q3GIxQ",
+  authDomain: "ds-gadgets.firebaseapp.com",
+  projectId: "ds-gadgets",
+  storageBucket: "ds-gadgets.firebasestorage.app",
+  messagingSenderId: "129602203125",
+  appId: "1:129602203125:web:6630ac7fadcd25ecc884bc",
+  measurementId: "G-727NV9G2SH"
 };
 
 export const ADMIN_EMAILS = [
